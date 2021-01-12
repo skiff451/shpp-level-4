@@ -25,7 +25,7 @@ function DataTable(config, data) {
   if (!data) {
     setServerDataIntoTable(config, constructTable);
   } else {
-    constructTable(config, data);
+    constructTable(config, { data: data });
   }
 }
 
@@ -33,20 +33,26 @@ function setServerDataIntoTable(config, tableConstructor) {
   const url = config.apiUrl;
   fetch(url)
     .then((response) => response.json())// get response and transform to json
-    .then((json) => Object.values(json.data))// make into an array from big object "json.data"
+    .then((json) => {
+      return {// return an object with data
+        data: Object.values(json.data),
+        id: Object.keys(json.data),
+        url: url,
+      }
+    })
     .then(tableData => {
-      tableConstructor(config, tableData, url); //create table using server data which converted to array
+      tableConstructor(config, tableData); //create table using server data which converted to array
     })
 }
 
 //create table
 
-function constructTable(config, data, url) {
+function constructTable(config, data) {
   const parentElement = document.querySelector(config.parent),
     columnsNames = config.columns.map(col => col.title),
     columnsValues = config.columns.map(col => col.value);
   const table = createTableElement('table', createTableHead(columnsNames))
-  table.append(createTableBody(columnsValues, data, url))
+  table.append(createTableBody(columnsValues, data))
   parentElement.append(table);
 }
 
@@ -76,20 +82,19 @@ function createTableHead(columnsNames) {
 
 
 // create table body
-function createTableBody(columnsValues, data, url) {
+function createTableBody(columnsValues, data) {
   const tableBodyTrs = [];
-  data.forEach((dataItem, index) => {
+  data.data.forEach((dataItem, index) => {
     const tableBodyTds = [];
-    let indexId = index + 1;
-    tableBodyTds.push(createTableElement('td', indexId));
+    tableBodyTds.push(createTableElement('td', index + 1));
     columnsValues.forEach(colProp => {
       // checks if prop is birthday otherwise just returns without transformation
       dataItem[colProp] = birthdayData(dataItem, colProp);
       tableBodyTds.push(createTableElement('td', dataItem[colProp]));
     })
 
-    
-    tableBodyTds.push(createTableElement('td', createDeleteBtn(indexId, url)));// add delete btn before adding a table row
+
+    tableBodyTds.push(createTableElement('td', createDeleteBtn(data.id[index], data.url)));// add delete btn before adding a table row
     tableBodyTrs.push(createTableElement('tr', tableBodyTds));
   })
   return createTableElement('tbody', tableBodyTrs);
@@ -106,13 +111,13 @@ function createDeleteBtn(id, url) {
 
 function deleteFunction(id, url) {
   return (event) => {
-    console.log(event.currentTarget);
-    console.log(id);
     const deleteUrl = url + id;
-    fetch(deleteUrl,{
+    fetch(deleteUrl, {
       method: 'DELETE',
     }).then();
-    // DataTable(config1)
+    const table = document.querySelector('table');
+    table.remove();
+    DataTable(config1);
   }
 }
 
@@ -141,18 +146,23 @@ function addZero(dateItem) {
 }
 
 
+// fetch('http://mock-api.shpp.me/ssamohval/users/10',{
+//   method: 'DELETE',
+// }).then();
 
-
+fetch('http://mock-api.shpp.me/ssamohval/users')
+  .then((response) => response.json())
+  .then((json) => console.log(json));
 
 // fetch('http://mock-api.shpp.me/ssamohval/users/', {
 //   method: 'POST',
 //   body: JSON.stringify(
 //     {
-//       "name": "Petr",
-//       "surname": "Sicor",
+//       "name": "Coca",
+//       "surname": "Cola",
 //       "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
-//       "birthday": "2021-12-24T13:42:31.357Z",
-//       "id": 1
+//       "birthday": "2021-04-24T13:42:31.357Z",
+//       // "id": 1
 //     }
 
 //   ),
@@ -169,7 +179,30 @@ function addZero(dateItem) {
 //       .then((json) => console.log(json));
 //   });
 
+// fetch('http://mock-api.shpp.me/ssamohval/users/', {
+//   method: 'POST',
+//   body: JSON.stringify(
+//     {
+//       "name": "Georgiy",
+//       "surname": "Kozubin",
+//       "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
+//       "birthday": "2021-05-24T13:42:31.357Z",
+//       // "id": 1
+//     }
 
+//   ),
+//   headers: {
+//     'Content-type': 'application/json; charset=UTF-8',
+//   },
+// })
+//   .then((response) => response.text())
+//   .then((json) => {
+//     console.log("json in post", json)
+//   }).then(() => {
+//     // fetch('http://mock-api.shpp.me/ssamohval/users')
+//     //   .then((response) => response.json())
+//     //   .then((json) => console.log(json));
+//   });
 
 
   // fetch('http://mock-api.shpp.me/ssamohval/users/', {
@@ -195,3 +228,4 @@ function addZero(dateItem) {
   //       .then((response) => response.json())
   //       .then((json) => console.log(json));
   //   });
+
