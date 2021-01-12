@@ -34,6 +34,7 @@ function setServerDataIntoTable(config, tableConstructor) {
   fetch(url)
     .then((response) => response.json())// get response and transform to json
     .then((json) => {
+      console.log("SERVER DATA", json.data);
       return {// return an object with data
         data: Object.values(json.data),
         id: Object.keys(json.data),
@@ -110,14 +111,13 @@ function createDeleteBtn(id, url) {
 }
 
 function deleteFunction(id, url) {
-  return (event) => {
+  return () => {
     const deleteUrl = url + id;
     fetch(deleteUrl, {
       method: 'DELETE',
-    }).then();
-    const table = document.querySelector('table');
-    table.remove();
-    DataTable(config1);
+    })
+      .then(document.querySelector('table').remove())
+      .then(setServerDataIntoTable(config1, constructTable))
   }
 }
 
@@ -134,8 +134,6 @@ function birthdayData(data, columnProperty) {
   }
 }
 
-
-
 // add zero to beautify date string
 function addZero(dateItem) {
   if (dateItem < 10) {
@@ -150,9 +148,9 @@ function addZero(dateItem) {
 //   method: 'DELETE',
 // }).then();
 
-fetch('http://mock-api.shpp.me/ssamohval/users')
-  .then((response) => response.json())
-  .then((json) => console.log(json));
+// fetch('http://mock-api.shpp.me/ssamohval/users')
+//   .then((response) => response.json())
+//   .then((json) => console.log(json));
 
 // fetch('http://mock-api.shpp.me/ssamohval/users/', {
 //   method: 'POST',
@@ -173,11 +171,12 @@ fetch('http://mock-api.shpp.me/ssamohval/users')
 //   .then((response) => response.text())
 //   .then((json) => {
 //     console.log("json in post", json)
-//   }).then(() => {
-//     fetch('http://mock-api.shpp.me/ssamohval/users')
-//       .then((response) => response.json())
-//       .then((json) => console.log(json));
-//   });
+//   })
+  // .then(() => {
+  //   fetch('http://mock-api.shpp.me/ssamohval/users')
+  //     .then((response) => response.json())
+  //     .then((json) => console.log(json));
+  // });
 
 // fetch('http://mock-api.shpp.me/ssamohval/users/', {
 //   method: 'POST',
