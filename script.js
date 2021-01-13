@@ -111,13 +111,19 @@ function createDeleteBtn(id, url) {
 }
 
 function deleteFunction(id, url) {
-  return () => {
+  return (event) => {
     const deleteUrl = url + id;
     fetch(deleteUrl, {
       method: 'DELETE',
     })
-      .then(document.querySelector('table').remove())
-      .then(setServerDataIntoTable(config1, constructTable))
+      // .then(document.querySelector('table').remove())
+      // .then(setServerDataIntoTable(config1, constructTable));
+      .then(() => {
+        console.log(event.path);
+        const tr = event.path.find(element => element.localName === "tr");
+        console.log(tr);
+        tr.remove();
+      })
   }
 }
 
@@ -162,7 +168,6 @@ function addZero(dateItem) {
 //       "birthday": "2021-04-24T13:42:31.357Z",
 //       // "id": 1
 //     }
-
 //   ),
 //   headers: {
 //     'Content-type': 'application/json; charset=UTF-8',
@@ -172,11 +177,12 @@ function addZero(dateItem) {
 //   .then((json) => {
 //     console.log("json in post", json)
 //   })
-  // .then(() => {
-  //   fetch('http://mock-api.shpp.me/ssamohval/users')
-  //     .then((response) => response.json())
-  //     .then((json) => console.log(json));
-  // });
+
+//   // .then(() => {
+//   //   fetch('http://mock-api.shpp.me/ssamohval/users')
+//   //     .then((response) => response.json())
+//   //     .then((json) => console.log(json));
+//   // });
 
 // fetch('http://mock-api.shpp.me/ssamohval/users/', {
 //   method: 'POST',
@@ -204,27 +210,27 @@ function addZero(dateItem) {
 //   });
 
 
-  // fetch('http://mock-api.shpp.me/ssamohval/users/', {
-  //   method: 'POST',
-  //   body: JSON.stringify(
-  //     {
-  //       "name": "ZORRO",
-  //       "surname": "Zavalskii",
-  //       "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/123.jpg",
-  //       "birthday": "2021-01-24T13:42:31.357Z",
-  //     }
+//   fetch('http://mock-api.shpp.me/ssamohval/users/', {
+//     method: 'POST',
+//     body: JSON.stringify(
+//       {
+//         "name": "ZORRO",
+//         "surname": "Zavalskii",
+//         "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/123.jpg",
+//         "birthday": "2021-01-24T13:42:31.357Z",
+//       }
 
-  //   ),
-  //   headers: {
-  //     'Content-type': 'application/json; charset=UTF-8',
-  //   },
-  // })
-  //   .then((response) => response.text())
-  //   .then((json) => {
-  //     console.log("json in post", json)
-  //   }).then(() => {
-  //     fetch('http://mock-api.shpp.me/ssamohval/users')
-  //       .then((response) => response.json())
-  //       .then((json) => console.log(json));
-  //   });
+//     ),
+//     headers: {
+//       'Content-type': 'application/json; charset=UTF-8',
+//     },
+//   })
+//     .then((response) => response.text())
+//     .then((json) => {
+//       console.log("json in post", json)
+//     }).then(() => {
+//       // fetch('http://mock-api.shpp.me/ssamohval/users')
+//       //   .then((response) => response.json())
+//       //   .then((json) => console.log(json));
+//     });
 
