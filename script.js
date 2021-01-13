@@ -2,7 +2,7 @@
 
 const config1 = {
   parent: '#usersTable',
-  apiUrl: 'http://mock-api.shpp.me/ssamohval/users/',
+  apiUrl: 'https://mock-api.shpp.me/ssamohval/users/',
 
   columns: [
     { title: 'Имя', value: 'name' },
