@@ -116,13 +116,9 @@ function deleteFunction(id, url) {
     fetch(deleteUrl, {
       method: 'DELETE',
     })
-      // .then(document.querySelector('table').remove())
-      // .then(setServerDataIntoTable(config1, constructTable));
       .then(() => {
-        // console.log(event.path);
-        const tr = event.path.find(element => element.localName === "tr");
-        // console.log(tr);
-        tr.remove();
+
+        tableRenderAfterDeletion(event)
       })
   }
 }
@@ -149,7 +145,18 @@ function addZero(dateItem) {
   }
 }
 
+function tableRenderAfterDeletion(event) {
+  const tr = event.path.find(element => element.localName === "tr");
+  tr.classList.add('fade');
+  setInterval(() => {
+    tr.remove();
+    const numberedTd = document.querySelectorAll('td:first-child');
+    numberedTd.forEach((item, index) => {
+      item.innerHTML = index + 1;
+    })
+  }, 300)
 
+}
 // fetch('http://mock-api.shpp.me/ssamohval/users/10',{
 //   method: 'DELETE',
 // }).then();
@@ -162,8 +169,8 @@ fetch('http://mock-api.shpp.me/ssamohval/users/', {
   method: 'POST',
   body: JSON.stringify(
     {
-      "name": "Dendy",
-      "surname": "Dosola",
+      "name": "Serghey",
+      "surname": "Samokhval",
       "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
       "birthday": "2020-04-14T13:42:31.357Z",
       // "id": 1

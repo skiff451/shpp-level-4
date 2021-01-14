@@ -74,3 +74,8 @@ tr:hover{
 .delete-button span{
     font-size: 20px;
 }
+
+.fade{
+    opacity: 0.3;
+    transition: opacity .3s;
+}
