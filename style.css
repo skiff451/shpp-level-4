@@ -45,37 +45,68 @@ td:first-child {
 }
 
 tr:nth-child(even) {
-    background:rgba(37, 4, 68, 0.24);
+    background: rgba(37, 4, 68, 0.24);
 }
 
-tr:hover{
-    background:rgba(0, 0, 0, 0.37);
+tbody tr:hover {
+    background: rgba(0, 0, 0, 0.37);
 }
 
-.delete-button:hover{
-    background-color:rgb(252, 0, 0);
+.delete-button:hover {
+    background-color: rgb(252, 0, 0);
     cursor: pointer;
+    transition: background-color .3s;
 }
 
-.delete-button{
+.delete-button {
     padding: 5px;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color:rgba(255, 73, 73, 0.788);
+    background-color: rgba(255, 73, 73, 0.788);
     border-radius: 5px;
 }
 
-.delete-button img{
+.delete-button img {
     width: 30px;
     height: 30px;
 }
 
-.delete-button span{
+.delete-button span {
     font-size: 20px;
 }
 
-.fade{
+.fade {
     opacity: 0.3;
     transition: opacity .3s;
+}
+
+.add-button {
+    background-color:rgba(104, 10, 228, 0.753);
+}
+
+
+.add-button:hover  {
+    background-color: rgba(0, 60, 255, 0.726);
+    transition: background-color .8s;
+    cursor: pointer;
+}
+
+.add-button td {
+    border: 3px solid rgba(68, 10, 228, 0.836);
+    font-size: 20px;
+    font-family: 'Kurale', serif;
+}
+
+.add-button div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+.add-button img {
+    margin-right: 20px;
+    width: 20px;
+    height: 20px;
 }

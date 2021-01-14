@@ -20,6 +20,7 @@ const users = [
 
 DataTable(config1);
 
+
 function DataTable(config, data) {
 
   if (!data) {
@@ -55,6 +56,13 @@ function constructTable(config, data) {
   const table = createTableElement('table', createTableHead(columnsNames))
   table.append(createTableBody(columnsValues, data))
   parentElement.append(table);
+
+  const addBtn = document.querySelector('.add-button');
+ 
+  console.log('ADD_BTN', addBtn);
+
+  addBtn.addEventListener('click', addInputs());
+
 }
 
 //create table element
@@ -70,6 +78,7 @@ function createTableElement(elementName = 'td', content = 'null') {
   }
   return element;
 }
+
 // create table head
 function createTableHead(columnsNames) {
   columnsNames.unshift('№');
@@ -78,7 +87,46 @@ function createTableHead(columnsNames) {
     return createTableElement('th', item);
   }),
     trHead = createTableElement('tr', thArr);
-  return createTableElement('thead', trHead);
+  const elemsArr = [createAddButton(trHead.childElementCount), trHead];
+
+  return createTableElement('thead', elemsArr);
+}
+
+
+function createAddButton(childElementCount) {
+  const img = document.createElement('img');
+  img.setAttribute('src', './icons/Plus icon.svg');
+
+  const elemArr = [img, createTableElement('span', 'Добавить')];
+  const td = createTableElement('td', createTableElement('div', elemArr));
+  td.setAttribute('colspan', childElementCount);
+
+  const tr = createTableElement('tr', td);
+  tr.classList.add('add-button');
+  return tr;
+}
+
+function addInputs() {
+  const tHead = document.querySelector('thead');
+  const tds = [];
+  console.log('tHead:', tHead);
+  for (let i = 0; i <= childElementCount; i++) {
+    const input = createTableElement('input', '');
+    const td = createTableElement('td', input);
+    tds.push(td);
+
+  }
+
+  const tr = createTableElement('tr', tds);
+
+
+
+  return (event) => {
+    console.log(tHead);
+    console.log('TR ', tr);
+    // tHead.append(tr);
+
+  }
 }
 
 
@@ -93,8 +141,6 @@ function createTableBody(columnsValues, data) {
       dataItem[colProp] = birthdayData(dataItem, colProp);
       tableBodyTds.push(createTableElement('td', dataItem[colProp]));
     })
-
-
     tableBodyTds.push(createTableElement('td', createDeleteBtn(data.id[index], data.url)));// add delete btn before adding a table row
     tableBodyTrs.push(createTableElement('tr', tableBodyTds));
   })
@@ -117,9 +163,9 @@ function deleteFunction(id, url) {
       method: 'DELETE',
     })
       .then(() => {
-
-        tableRenderAfterDeletion(event)
+        renderTableAfterDeletion(event)
       })
+      .catch(err => console.log(err))
   }
 }
 
@@ -145,7 +191,7 @@ function addZero(dateItem) {
   }
 }
 
-function tableRenderAfterDeletion(event) {
+function renderTableAfterDeletion(event) {
   const tr = event.path.find(element => element.localName === "tr");
   tr.classList.add('fade');
   setInterval(() => {
@@ -165,7 +211,7 @@ function tableRenderAfterDeletion(event) {
 //   .then((response) => response.json())
 //   .then((json) => console.log(json));
 
-fetch('http://mock-api.shpp.me/ssamohval/users/', {
+fetch('https://mock-api.shpp.me/ssamohval/users/', {
   method: 'POST',
   body: JSON.stringify(
     {
@@ -184,60 +230,4 @@ fetch('http://mock-api.shpp.me/ssamohval/users/', {
   .then((json) => {
     console.log("json in post", json)
   })
-
-  // .then(() => {
-  //   fetch('http://mock-api.shpp.me/ssamohval/users')
-  //     .then((response) => response.json())
-  //     .then((json) => console.log(json));
-  // });
-
-// fetch('http://mock-api.shpp.me/ssamohval/users/', {
-//   method: 'POST',
-//   body: JSON.stringify(
-//     {
-//       "name": "Georgiy",
-//       "surname": "Kozubin",
-//       "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
-//       "birthday": "2021-05-24T13:42:31.357Z",
-//       "id": 1
-//     }
-
-//   ),
-//   headers: {
-//     'Content-type': 'application/json; charset=UTF-8',
-//   },
-// })
-//   .then((response) => response.text())
-//   .then((json) => {
-//     console.log("json in post", json)
-//   }).then(() => {
-//     // fetch('http://mock-api.shpp.me/ssamohval/users')
-//     //   .then((response) => response.json())
-//     //   .then((json) => console.log(json));
-//   });
-
-
-  // fetch('http://mock-api.shpp.me/ssamohval/users/', {
-  //   method: 'POST',
-  //   body: JSON.stringify(
-  //     {
-  //       "name": "ZORRO",
-  //       "surname": "Zavalskii",
-  //       "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/123.jpg",
-  //       "birthday": "2021-03-24T13:42:31.357Z",
-  //     }
-
-  //   ),
-  //   headers: {
-  //     'Content-type': 'application/json; charset=UTF-8',
-  //   },
-  // })
-  //   .then((response) => response.text())
-  //   .then((json) => {
-  //     console.log("json in post", json)
-  //   }).then(() => {
-  //     // fetch('http://mock-api.shpp.me/ssamohval/users')
-  //     //   .then((response) => response.json())
-  //     //   .then((json) => console.log(json));
-  //   });
 
