@@ -4,15 +4,25 @@
     <filter id="filter_1">
       <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.5647059 0 0 0 0 0.76862746 0 0 0 0 0.09411765 0 0 0 1 0" />
     </filter>
-    <path d="M0 0L68 0L68 68L0 68L0 0Z" id="path_1" />
+    <filter id="filter_2">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" />
+    </filter>
+    <path d="M0 0L68 0L68 68L0 68L0 0L0 0Z" id="path_1" />
     <clipPath id="mask_1">
       <use xlink:href="#path_1" />
     </clipPath>
   </defs>
-  <g id="Ok-icon" filter="url(#filter_1)">
-    <path d="M0 0L68 0L68 68L0 68L0 0Z" id="Background" fill="none" fill-rule="evenodd" stroke="none" />
-    <g clip-path="url(#mask_1)">
-      <path d="M27.2 0C12.1788 0 0 12.1788 0 27.2C0 42.2212 12.1788 54.4 27.2 54.4C42.2212 54.4 54.4 42.2212 54.4 27.2C54.4 12.1788 42.2212 0 27.2 0L27.2 0ZM42.4025 22.0025L25.2665 39.1385C24.8404 39.5647 24.2647 39.8027 23.664 39.8027C23.0633 39.8027 22.4853 39.5647 22.0615 39.1385L14.2347 31.3117C13.3484 30.4255 13.3484 28.9929 14.2347 28.1067C15.1209 27.2204 16.5535 27.2204 17.4397 28.1067L23.664 34.3309L39.1975 18.7975C40.0837 17.9112 41.5163 17.9112 42.4025 18.7975C43.2888 19.6837 43.2888 21.1163 42.4025 22.0025L42.4025 22.0025Z" transform="translate(6.7999954 6.8000183)" id="Shape" fill="#FFFFFF" fill-rule="evenodd" stroke="none" />
+  <g id="Ok-icon">
+    <g id="Ok-icon" filter="url(#filter_2)">
+      <path d="M0 0L68 0L68 68L0 68L0 0L0 0Z" id="Background" fill="none" fill-rule="evenodd" stroke="none" />
+      <g id="Mask-group">
+        <path d="M0 0L68 0L68 68L0 68L0 0L0 0Z" id="path_1" fill="none" fill-rule="evenodd" stroke="none" />
+        <g clip-path="url(#mask_1)">
+          <g id="Group" transform="translate(6.7999954 6.8000183)" filter="url(#filter_1)">
+            <path d="M27.2 0C12.1788 0 0 12.1788 0 27.2C0 42.2212 12.1788 54.4 27.2 54.4C42.2212 54.4 54.4 42.2212 54.4 27.2C54.4 12.1788 42.2212 0 27.2 0L27.2 0L27.2 0ZM42.4025 22.0025L25.2665 39.1385C24.8404 39.5647 24.2647 39.8027 23.664 39.8027C23.0633 39.8027 22.4853 39.5647 22.0615 39.1385L14.2347 31.3117C13.3484 30.4255 13.3484 28.9929 14.2347 28.1067C15.1209 27.2204 16.5535 27.2204 17.4397 28.1067L23.664 34.3309L39.1975 18.7975C40.0837 17.9112 41.5163 17.9112 42.4025 18.7975C43.2888 19.6837 43.2888 21.1163 42.4025 22.0025L42.4025 22.0025L42.4025 22.0025Z" id="Shape" fill="#FFFFFF" fill-rule="evenodd" stroke="none" />
+          </g>
+        </g>
+      </g>
     </g>
   </g>
 </svg>

@@ -35,7 +35,6 @@ function setServerDataIntoTable(config, tableConstructor) {
   fetch(url)
     .then((response) => response.json())// get response and transform to json
     .then((json) => {
-      console.log("SERVER DATA", json.data);
       return {// return an object with data
         data: Object.values(json.data),
         id: Object.keys(json.data),
@@ -50,19 +49,20 @@ function setServerDataIntoTable(config, tableConstructor) {
 //create table
 
 function constructTable(config, data) {
-  const parentElement = document.querySelector(config.parent),
-    columnsNames = config.columns.map(col => col.title),
-    columnsValues = config.columns.map(col => col.value);
+  const parentElement = document.querySelector(config.parent);
+  const columnsNames = config.columns.map(col => col.title);
+  const columnsValues = config.columns.map(col => col.value);
+
   const table = createTableElement('table', createTableHead(columnsNames))
   table.append(createTableBody(columnsValues, data))
+
   parentElement.append(table);
 
+
+
   const addBtn = document.querySelector('.add-button');
- 
-  console.log('ADD_BTN', addBtn);
 
-  addBtn.addEventListener('click', addInputs());
-
+  addBtn.addEventListener('click', addInputs(config));
 }
 
 //create table element
@@ -87,13 +87,13 @@ function createTableHead(columnsNames) {
     return createTableElement('th', item);
   }),
     trHead = createTableElement('tr', thArr);
-  const elemsArr = [createAddButton(trHead.childElementCount), trHead];
+
+  const elemsArr = [createAddBtn(trHead.childElementCount), trHead];
 
   return createTableElement('thead', elemsArr);
 }
 
-
-function createAddButton(childElementCount) {
+function createAddBtn(childElementCount) {
   const img = document.createElement('img');
   img.setAttribute('src', './icons/Plus icon.svg');
 
@@ -103,28 +103,66 @@ function createAddButton(childElementCount) {
 
   const tr = createTableElement('tr', td);
   tr.classList.add('add-button');
+
   return tr;
 }
 
-function addInputs() {
+function addInputs({ apiUrl, columns }) {
   const tHead = document.querySelector('thead');
   const tds = [];
-  console.log('tHead:', tHead);
-  for (let i = 0; i <= childElementCount; i++) {
+  const inputs = {};
+
+
+  tds.push(document.createElement('td'));
+
+  columns.forEach((item) => {
+    const val = item.value
     const input = createTableElement('input', '');
+    inputs[val] = input;
+
     const td = createTableElement('td', input);
     tds.push(td);
+  })
 
-  }
-
+  tds.push(createTableElement('td', createAcceptBtn(apiUrl, inputs)));
+  
   const tr = createTableElement('tr', tds);
 
-
-
   return (event) => {
-    console.log(tHead);
-    console.log('TR ', tr);
-    // tHead.append(tr);
+    // let inputs = columns.map(item => item.value);
+
+    tHead.append(tr);
+
+  }
+}
+
+function createAcceptBtn(url, inputs) {
+  const acceptBtn = document.createElement('btn');
+  acceptBtn.classList.add("accept-button");
+  acceptBtn.innerHTML = `<span>Добавить</span><img src="./icons/Ok icon.svg" alt="accept">`
+
+  acceptBtn.addEventListener('click', addUser(url));
+  return acceptBtn;
+}
+
+function addUser(url, inputs) {
+  return (event) => {
+   
+
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(
+          {
+            "name": "Serghey",
+            "surname": "Samokhval",
+            "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
+            "birthday": "2020-04-14T13:42:31.357Z",
+          }
+        ),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
 
   }
 }
@@ -152,11 +190,11 @@ function createDeleteBtn(id, url) {
   deleteBtn.classList.add("delete-button");
   deleteBtn.innerHTML = `<span>Удалить</span><img src="./icons/Remove icon.svg" alt="trash">`
 
-  deleteBtn.addEventListener('click', deleteFunction(id, url));
+  deleteBtn.addEventListener('click', deleteUser(id, url));
   return deleteBtn;
 }
 
-function deleteFunction(id, url) {
+function deleteUser(id, url) {
   return (event) => {
     const deleteUrl = url + id;
     fetch(deleteUrl, {
@@ -196,38 +234,11 @@ function renderTableAfterDeletion(event) {
   tr.classList.add('fade');
   setInterval(() => {
     tr.remove();
-    const numberedTd = document.querySelectorAll('td:first-child');
+    const numberedTd = document.querySelectorAll('tbody td:first-child');
     numberedTd.forEach((item, index) => {
       item.innerHTML = index + 1;
     })
   }, 300)
-
 }
-// fetch('http://mock-api.shpp.me/ssamohval/users/10',{
-//   method: 'DELETE',
-// }).then();
 
-// fetch('http://mock-api.shpp.me/ssamohval/users')
-//   .then((response) => response.json())
-//   .then((json) => console.log(json));
-
-fetch('https://mock-api.shpp.me/ssamohval/users/', {
-  method: 'POST',
-  body: JSON.stringify(
-    {
-      "name": "Serghey",
-      "surname": "Samokhval",
-      "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
-      "birthday": "2020-04-14T13:42:31.357Z",
-      // "id": 1
-    }
-  ),
-  headers: {
-    'Content-type': 'application/json; charset=UTF-8',
-  },
-})
-  .then((response) => response.text())
-  .then((json) => {
-    console.log("json in post", json)
-  })
 

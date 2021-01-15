@@ -82,11 +82,11 @@ tbody tr:hover {
 }
 
 .add-button {
-    background-color:rgba(104, 10, 228, 0.753);
+    background-color: rgba(104, 10, 228, 0.753);
 }
 
 
-.add-button:hover  {
+.add-button:hover {
     background-color: rgba(0, 60, 255, 0.726);
     transition: background-color .8s;
     cursor: pointer;
@@ -96,6 +96,7 @@ tbody tr:hover {
     border: 3px solid rgba(68, 10, 228, 0.836);
     font-size: 20px;
     font-family: 'Kurale', serif;
+    color: rgb(226, 224, 224);
 }
 
 .add-button div {
@@ -110,3 +111,37 @@ tbody tr:hover {
     width: 20px;
     height: 20px;
 }
+
+.accept-button {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: rgba(30, 255, 0, 0.788);
+    border-radius: 5px;
+}
+
+.accept-button:hover {
+    background-color: rgb(30, 255, 0);
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+.accept-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.accept-button span {
+    font-size: 20px;
+}
+
+/* thead td{
+    padding: 0;
+    margin: 0;
+} */
+
+/* input{
+    height: 35px;
+    width: 200px;
+} */
