@@ -118,8 +118,7 @@ function addInputs({ apiUrl, columns }) {
     const input = createTableElement('input', '');
     inputs[val] = input;
 
-    const td = createTableElement('td', input);
-    tds.push(td);
+    tds.push(createTableElement('td', input));
   })
 
   tds.push(createTableElement('td', createAcceptBtn(apiUrl, inputs)));
@@ -141,19 +140,38 @@ function createAcceptBtn(url, inputs) {
 }
 
 function addUser(url, inputs) {
-
   return () => {
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(dataToFetch(inputs)),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    }).then(addNewTableRow(dataToFetch(inputs), url))
+    console.log('INPUTS', inputs);
 
+    if (isValidInputs(inputs)) {
+     
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(dataToFetch(inputs)),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }).then(addNewTableRow(dataToFetch(inputs), url))
+
+    }
   }
 }
 
+function isValidInputs(inputs) {
+  const keys = Object.keys(inputs);
+  let valid = true;
+  keys.forEach(key => {
+    if (!inputs[key].value) {
+      inputs[key].classList.add('invalid');
+      valid = false
+    } else {
+      if (inputs[key].classList.contains('invalid')) {
+        inputs[key].classList.remove('invalid');
+      }
+    }
+  })
+  return valid;
+}
 
 
 function dataToFetch(inputs) {
@@ -168,26 +186,26 @@ function dataToFetch(inputs) {
 
 function addNewTableRow(data, url) {
   fetch(url)
-  .then((response) => response.json())// get response and transform to json
-  .then((json) => {
-    const tBody = document.querySelector('tbody');
-    const number = new Number(tBody.lastChild.firstChild.innerText);
-    const tds = [];
-    const dataKeys = Object.keys(data);
-    tds.push(createTableElement('td', number + 1));
-  
-    dataKeys.forEach(key => {
-      if (key !== 'avatar') {
-        tds.push(createTableElement('td', data[key]))
-      }
+    .then((response) => response.json())// get response and transform to json
+    .then((json) => {
+      const tBody = document.querySelector('tbody');
+      const number = new Number(tBody.lastChild.firstChild.innerText);
+      const tds = [];
+      const dataKeys = Object.keys(data);
+      tds.push(createTableElement('td', number + 1));
+
+      dataKeys.forEach(key => {
+        if (key !== 'avatar') {
+          tds.push(createTableElement('td', data[key]))
+        }
+      })
+
+      const serverData = Object.keys(json.data);
+      const prevId = serverData[serverData.length - 1]
+      tds.push(createTableElement('td', createDeleteBtn(prevId + 1, url)))
+
+      tBody.append(createTableElement('tr', tds))
     })
-
-    const serverData = Object.keys(json.data);
-    const prevId = serverData[serverData.length - 1]
-    tds.push(createTableElement('td', createDeleteBtn(prevId + 1, url)))
-
-    tBody.append(createTableElement('tr', tds))
-  }) 
 }
 
 
@@ -208,11 +226,12 @@ function createTableBody(columnsValues, data) {
   return createTableElement('tbody', tableBodyTrs);
 }
 
+
+
 function createDeleteBtn(id, url) {
   const deleteBtn = document.createElement('btn');
   deleteBtn.classList.add("delete-button");
   deleteBtn.innerHTML = `<span>Удалить</span><img src="./icons/Remove icon.svg" alt="trash">`
-
   deleteBtn.addEventListener('click', deleteUser(id, url));
   return deleteBtn;
 }
@@ -226,7 +245,7 @@ function deleteUser(id, url) {
       .then(() => {
         renderTableAfterDeletion(event)
       })
-      
+
   }
 }
 

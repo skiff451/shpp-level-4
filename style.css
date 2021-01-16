@@ -37,7 +37,7 @@ td {
     border-color: rgba(255, 115, 0, 0.644);
     border-style: solid;
     background-color: rgba(104, 0, 202, 0.219);
-    padding: 5px 25px;
+    padding: 2px;
 }
 
 td:first-child {
@@ -141,7 +141,20 @@ tbody tr:hover {
     margin: 0;
 } */
 
-/* input{
+input {
     height: 35px;
-    width: 200px;
-} */
+    font-size: 20px;
+    background-color: rgba(146, 77, 211, 0.219);
+    border: none;
+}
+
+input:focus {
+    border-color: rgba(46, 0, 10, 0.521);
+}
+
+.invalid {
+    border: 2px solid red;
+    border-radius: 3px;
+    background-color: rgba(255, 65, 65, 0.664);
+
+}
