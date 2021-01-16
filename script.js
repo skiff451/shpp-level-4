@@ -20,7 +20,7 @@ const users = [
 
 DataTable(config1);
 
-
+// create table and append it to web page
 function DataTable(config, data) {
 
   if (!data) {
@@ -30,14 +30,15 @@ function DataTable(config, data) {
   }
 }
 
+//get server data appends it to table
 function setServerDataIntoTable(config, tableConstructor) {
   const url = config.apiUrl;
   fetch(url)
     .then((response) => response.json())// get response and transform to json
     .then((json) => {
       return {// return an object with data
-        data: Object.values(json.data),
-        id: Object.keys(json.data),
+        data: Object.values(json.data), // just user data object
+        id: Object.keys(json.data), // id of user data
         url: url,
       }
     })
@@ -47,7 +48,6 @@ function setServerDataIntoTable(config, tableConstructor) {
 }
 
 //create table
-
 function constructTable(config, data) {
   const parentElement = document.querySelector(config.parent);
   const columnsNames = config.columns.map(col => col.title);
@@ -141,10 +141,9 @@ function createAcceptBtn(url, inputs) {
 
 function addUser(url, inputs) {
   return () => {
-    console.log('INPUTS', inputs);
 
     if (isValidInputs(inputs)) {
-     
+
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(dataToFetch(inputs)),
@@ -152,7 +151,7 @@ function addUser(url, inputs) {
           'Content-type': 'application/json; charset=UTF-8',
         },
       }).then(addNewTableRow(dataToFetch(inputs), url))
-
+        .then(resetInputValues(inputs))
     }
   }
 }
@@ -171,6 +170,13 @@ function isValidInputs(inputs) {
     }
   })
   return valid;
+}
+
+function resetInputValues(inputs) {
+  const keys = Object.keys(inputs);
+  keys.forEach(key => {
+    inputs[key].value = '';
+  })
 }
 
 
@@ -245,7 +251,6 @@ function deleteUser(id, url) {
       .then(() => {
         renderTableAfterDeletion(event)
       })
-
   }
 }
 
