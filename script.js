@@ -58,8 +58,6 @@ function constructTable(config, data) {
 
   parentElement.append(table);
 
-
-
   const addBtn = document.querySelector('.add-button');
 
   addBtn.addEventListener('click', addInputs(config));
@@ -93,6 +91,7 @@ function createTableHead(columnsNames) {
   return createTableElement('thead', elemsArr);
 }
 
+
 function createAddBtn(childElementCount) {
   const img = document.createElement('img');
   img.setAttribute('src', './icons/Plus icon.svg');
@@ -112,7 +111,6 @@ function addInputs({ apiUrl, columns }) {
   const tds = [];
   const inputs = {};
 
-
   tds.push(document.createElement('td'));
 
   columns.forEach((item) => {
@@ -125,14 +123,11 @@ function addInputs({ apiUrl, columns }) {
   })
 
   tds.push(createTableElement('td', createAcceptBtn(apiUrl, inputs)));
-  
+
   const tr = createTableElement('tr', tds);
 
-  return (event) => {
-    // let inputs = columns.map(item => item.value);
-
+  return () => {
     tHead.append(tr);
-
   }
 }
 
@@ -141,30 +136,58 @@ function createAcceptBtn(url, inputs) {
   acceptBtn.classList.add("accept-button");
   acceptBtn.innerHTML = `<span>Добавить</span><img src="./icons/Ok icon.svg" alt="accept">`
 
-  acceptBtn.addEventListener('click', addUser(url));
+  acceptBtn.addEventListener('click', addUser(url, inputs));
   return acceptBtn;
 }
 
 function addUser(url, inputs) {
-  return (event) => {
-   
 
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(
-          {
-            "name": "Serghey",
-            "surname": "Samokhval",
-            "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg",
-            "birthday": "2020-04-14T13:42:31.357Z",
-          }
-        ),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
+  return () => {
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(dataToFetch(inputs)),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    }).then(addNewTableRow(dataToFetch(inputs), url))
 
   }
+}
+
+
+
+function dataToFetch(inputs) {
+  const keys = Object.keys(inputs);
+  const data = keys.reduce((startData, currentKey, index) => {
+    startData[currentKey] = inputs[keys[index]].value;
+    return startData;
+  }, {});
+  data.avatar = "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg";
+  return data;
+}
+
+function addNewTableRow(data, url) {
+  fetch(url)
+  .then((response) => response.json())// get response and transform to json
+  .then((json) => {
+    const tBody = document.querySelector('tbody');
+    const number = new Number(tBody.lastChild.firstChild.innerText);
+    const tds = [];
+    const dataKeys = Object.keys(data);
+    tds.push(createTableElement('td', number + 1));
+  
+    dataKeys.forEach(key => {
+      if (key !== 'avatar') {
+        tds.push(createTableElement('td', data[key]))
+      }
+    })
+
+    const serverData = Object.keys(json.data);
+    const prevId = serverData[serverData.length - 1]
+    tds.push(createTableElement('td', createDeleteBtn(prevId + 1, url)))
+
+    tBody.append(createTableElement('tr', tds))
+  }) 
 }
 
 
@@ -203,7 +226,7 @@ function deleteUser(id, url) {
       .then(() => {
         renderTableAfterDeletion(event)
       })
-      .catch(err => console.log(err))
+      
   }
 }
 
