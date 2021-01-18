@@ -55,11 +55,9 @@ function constructTable(config, data) {
 
   const table = createTableElement('table', createTableHead(columnsNames))
   table.append(createTableBody(columnsValues, data))
-
   parentElement.append(table);
 
   const addBtn = document.querySelector('.add-button');
-
   addBtn.addEventListener('click', addInputs(config));
 }
 
@@ -102,7 +100,6 @@ function createAddBtn(childElementCount) {
 
   const tr = createTableElement('tr', td);
   tr.classList.add('add-button');
-
   return tr;
 }
 
@@ -141,9 +138,7 @@ function createAcceptBtn(url, inputs) {
 
 function addUser(url, inputs) {
   return () => {
-
     if (isValidInputs(inputs)) {
-
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(dataToFetch(inputs)),
@@ -182,10 +177,26 @@ function resetInputValues(inputs) {
 
 function dataToFetch(inputs) {
   const keys = Object.keys(inputs);
+
   const data = keys.reduce((startData, currentKey, index) => {
-    startData[currentKey] = inputs[keys[index]].value;
+
+    if (keys[index] === 'birthday') {
+     let reverseValue = inputs[keys[index]].value.split('.');
+      reverseValue[1] = +(reverseValue[1]- 1) + '';// make number, add '1', make string
+      console.log(reverseValue);
+      reverseValue = reverseValue.reverse();
+      console.log(reverseValue);
+
+      startData[currentKey] = new Date(...reverseValue);
+
+      const date = new Date(reverseValue);
+      
+    } else {
+      startData[currentKey] = inputs[keys[index]].value;
+    }
     return startData;
   }, {});
+
   data.avatar = "https://s3.amazonaws.com/uifaces/faces/twitter/arashmanteghi/128.jpg";
   return data;
 }
@@ -202,7 +213,20 @@ function addNewTableRow(data, url) {
 
       dataKeys.forEach(key => {
         if (key !== 'avatar') {
-          tds.push(createTableElement('td', data[key]))
+          if (key === 'birthday') {
+            const date = new Date(data[key]);
+            const stringDate = `${addZero(date.getDate())}.${addZero(date.getMonth() + 1)}.${date.getFullYear()}`;
+
+            // console.log('data obj ', data[key]);
+            // console.log('date ', date);
+            // console.log('str date ',stringDate);
+            // console.log('data ',json);
+
+            tds.push(createTableElement('td', stringDate));
+          } else {
+            tds.push(createTableElement('td', data[key]));
+          }
+
         }
       })
 
@@ -233,7 +257,6 @@ function createTableBody(columnsValues, data) {
 }
 
 
-
 function createDeleteBtn(id, url) {
   const deleteBtn = document.createElement('btn');
   deleteBtn.classList.add("delete-button");
@@ -260,7 +283,7 @@ function deleteUser(id, url) {
 function birthdayData(data, columnProperty) {
   if (columnProperty === 'birthday') {
     const date = new Date(data[columnProperty]),
-      birthdayDay = `${addZero(date.getDay() + 1)}.${addZero(date.getMonth() + 1)}.${date.getFullYear()}`;
+      birthdayDay = `${addZero(date.getDate())}.${addZero(date.getMonth() + 1)}.${date.getFullYear()}`;
     return birthdayDay;
   } else {
     return data[columnProperty];
